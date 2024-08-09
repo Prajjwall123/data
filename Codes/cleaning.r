@@ -20,6 +20,8 @@ final_data <- merged_housing %>%
   select(-c('null1', 'null2', 'null3', 'null4', 'null5', 'ID', 'SOAN')) %>%
   filter(grepl("Bristol|Cornwall", County, ignore.case = TRUE)) %>%
   filter(!is.na(Price))
+  #filter(!is.na(Locality))
+  filter(!is.na("Street"))
 
 # Specify the path where the cleaned data should be saved
 output_path <- "/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv"
