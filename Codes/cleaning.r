@@ -1,5 +1,7 @@
 library(tidyverse)
+library(dplyr)
 
+#housing cleaning
 
 column_names=c(
   "ID",
@@ -25,11 +27,9 @@ housing21=read_csv("/Users/acer/Desktop/assignment/Obtain/house price/pp-2021.cs
 housing22=read_csv("/Users/acer/Desktop/assignment/Obtain/house price/pp-2022.csv",col_names = column_names)
 housing23=read_csv("/Users/acer/Desktop/assignment/Obtain/house price/pp-2023.csv",col_names = column_names)
 
-#View(housing20)
 
 total_housing_data <- bind_rows(housing20, housing21, housing22, housing23)
 
-#View(total_housing_data)
 
 cleaned_data <- total_housing_data %>%
   select(-`PPD Category Type`, 
@@ -47,29 +47,22 @@ cleaned_data <- cleaned_data%>%
   mutate(`Date of Transfer` = substr(`Date of Transfer`, 1, 4)) %>%
     rename(Year = `Date of Transfer`)
 
-#View(cleaned_data)
 
 filtered_data <- cleaned_data %>%
-  filter(County %in% c('CORNWALL', 'CITY OF BRISTOL'))
+  filter(County %in% c('CORNWALL', 'CITY OF BRISTOL'))%>%
+  distinct()
 
-#View(filtered_data)
 
 output_path <- "/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv"
 
-write_csv(filtered_data, output_path)#house prices cleaned output csv file
+write_csv(filtered_data, output_path)
 
 #Broadband cleaning
 
-# Load necessary library
-library(dplyr)
-
-# Load the dataset
 file_path <- "/Users/acer/Desktop/assignment/Obtain/broadbandspeed/201805_fixed_pc_performance_r03.csv"
 broadband <- read_csv(file_path)
 
-View(broadband)
 
-# Select and filter the dataset
 filtered_broadband <- broadband %>%
   select(postcode_space, 
          `Median download speed (Mbit/s)`, 
@@ -86,30 +79,21 @@ filtered_broadband <- broadband %>%
            !is.na(`Maximum upload speed (Mbit/s)`) & 
            !is.na(`Maximum download speed (Mbit/s)`))
 
-# Display the cleaned data
-View(filtered_broadband)
-
-
 output_path <- "/Users/acer/Desktop/assignment/Cleaned/cleaned_broadband_data.csv"
 
-write_csv(filtered_broadband, output_path)#broadband cleaned output csv file without the postcode job
+write_csv(filtered_broadband, output_path)
 
-
-
-library(dplyr)
-
-# Load the CSV files
 housing_data <- read.csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv")
 broadband_data <- read.csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_broadband_data.csv")
 
-# Merge the datasets based on Postcode and postcode_space
 merged_data <- broadband_data %>%
   left_join(housing_data %>% select(Postcode, Town.City, County), 
             by = c("postcode_space" = "Postcode"))
 
-# Filter out rows with NA values
 filtered_data <- merged_data %>%
-  filter(!is.na(Town.City) & !is.na(County))
+  filter(!is.na(Town.City) & !is.na(County))%>%
+  distinct()
 
-# Save the merged data to a new CSV file
+dim(filtered_data)
+
 write.csv(filtered_data, "/Users/acer/Desktop/assignment/Cleaned/merged_broadband_housing_data.csv", row.names = FALSE)
