@@ -3,7 +3,7 @@ library(dplyr)
 
 # House Prices
 
-housing_data <- read.csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv")
+housing_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv")
 
 housing_2022 <- housing_data %>% 
   filter(Year == 2022)
@@ -42,10 +42,12 @@ ggplot(average_price_per_year, aes(x = Year, y = Average_Price, color = County))
 
 #Broadband 
 
-broadband_data <- read.csv("/Users/acer/Desktop/assignment/Cleaned/merged_broadband_housing_data.csv")
+broadband_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/merged_broadband_housing_data.csv")
+
+View(broadband_data)
 
 # Boxplot of Average Download Speeds in Both Counties
-ggplot(broadband_data, aes(x = County, y = Average.download.speed..Mbit.s.,fill=County)) +
+ggplot(broadband_data, aes(x = County, y = `Average download speed (Mbit/s)`,fill=County)) +
   geom_boxplot() +
   ggtitle("Boxplot of Average Download Speeds") +
   xlab("County") +
@@ -56,8 +58,8 @@ bristol_data <- broadband_data %>%
 
 
 bristol_summary <- bristol_data %>% 
-  summarise(Average_Speed = mean(Average.download.speed..Mbit.s.),
-            Maximum_Speed = mean(Maximum.download.speed..Mbit.s.))
+  summarise(Average_Speed = mean(`Average download speed (Mbit/s)`),
+            Maximum_Speed = max(`Maximum download speed (Mbit/s)`))
 
 bristol_df <- data.frame(
   Type = c("Average Download Speed", "Maximum Download Speed"),
@@ -74,8 +76,8 @@ ggplot(bristol_df, aes(x = Type, y = Speed)) +
 
 cornwall_summary <- broadband_data %>% 
   filter(County == "CORNWALL") %>%
-  summarise(Average_Speed = mean(Average.download.speed..Mbit.s.),
-            Maximum_Speed = mean(Maximum.download.speed..Mbit.s.))
+  summarise(Average_Speed = mean(`Average download speed (Mbit/s)`),
+            Maximum_Speed = max(`Maximum download speed (Mbit/s)`))
 
 cornwall_df <- data.frame(
   Type = c("Average Download Speed", "Maximum Download Speed"),

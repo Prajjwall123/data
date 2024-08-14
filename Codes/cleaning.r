@@ -83,17 +83,225 @@ output_path <- "/Users/acer/Desktop/assignment/Cleaned/cleaned_broadband_data.cs
 
 write_csv(filtered_broadband, output_path)
 
-housing_data <- read.csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv")
-broadband_data <- read.csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_broadband_data.csv")
+housing_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv")
+broadband_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_broadband_data.csv")
+
+View(housing_data)
+View(broadband_data)
 
 merged_data <- broadband_data %>%
-  left_join(housing_data %>% select(Postcode, Town.City, County), 
+  left_join(housing_data %>% select(Postcode, `Town/City`, County), 
             by = c("postcode_space" = "Postcode"))
 
 filtered_data <- merged_data %>%
-  filter(!is.na(Town.City) & !is.na(County))%>%
+  filter(!is.na(`Town/City`) & !is.na(County))%>%
   distinct()
 
 dim(filtered_data)
 
-write.csv(filtered_data, "/Users/acer/Desktop/assignment/Cleaned/merged_broadband_housing_data.csv", row.names = FALSE)
+write_csv(filtered_data, "/Users/acer/Desktop/assignment/Cleaned/merged_broadband_housing_data.csv")
+
+
+#Crime
+
+#2021
+cornwall1=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-07/2021-07-devon-and-cornwall-street.csv")
+cornwall2=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-08/2021-08-devon-and-cornwall-street.csv")
+cornwall3=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-09/2021-09-devon-and-cornwall-street.csv")
+cornwall4=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-10/2021-10-devon-and-cornwall-street.csv")
+cornwall5=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-11/2021-11-devon-and-cornwall-street.csv")
+cornwall6=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-12/2021-12-devon-and-cornwall-street.csv")
+bristol1=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-07/2021-07-avon-and-somerset-street.csv")
+bristol2=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-08/2021-08-avon-and-somerset-street.csv")
+bristol3=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-09/2021-09-avon-and-somerset-street.csv")
+bristol4=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-10/2021-10-avon-and-somerset-street.csv")
+bristol5=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-11/2021-11-avon-and-somerset-street.csv")
+bristol6=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-12/2021-12-avon-and-somerset-street.csv")
+
+#2022
+cornwall7=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-01/2022-01-devon-and-cornwall-street.csv")
+cornwall8=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-02/2022-02-devon-and-cornwall-street.csv")
+cornwall9=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-03/2022-03-devon-and-cornwall-street.csv")
+cornwall10=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-04/2022-04-devon-and-cornwall-street.csv")
+cornwall11=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-05/2022-05-devon-and-cornwall-street.csv")
+cornwall12=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-06/2022-06-devon-and-cornwall-street.csv")
+cornwall13=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-07/2022-07-devon-and-cornwall-street.csv")
+cornwall14=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-08/2022-08-devon-and-cornwall-street.csv")
+cornwall15=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-09/2022-09-devon-and-cornwall-street.csv")
+cornwall16=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-10/2022-10-devon-and-cornwall-street.csv")
+cornwall17=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-11/2022-11-devon-and-cornwall-street.csv")
+cornwall18=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-12/2022-12-devon-and-cornwall-street.csv")
+bristol7=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-01/2022-01-avon-and-somerset-street.csv")
+bristol8=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-02/2022-02-avon-and-somerset-street.csv")
+bristol9=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-03/2022-03-avon-and-somerset-street.csv")
+bristol10=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-04/2022-04-avon-and-somerset-street.csv")
+bristol11=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-05/2022-05-avon-and-somerset-street.csv")
+bristol12=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-06/2022-06-avon-and-somerset-street.csv")
+bristol13=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-07/2022-07-avon-and-somerset-street.csv")
+bristol14=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-08/2022-08-avon-and-somerset-street.csv")
+bristol15=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-09/2022-09-avon-and-somerset-street.csv")
+bristol16=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-10/2022-10-avon-and-somerset-street.csv")
+bristol17=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-11/2022-11-avon-and-somerset-street.csv")
+bristol18=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2022-12/2022-12-avon-and-somerset-street.csv")
+
+#2023
+cornwall19=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-01/2023-01-devon-and-cornwall-street.csv")
+cornwall20=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-02/2023-02-devon-and-cornwall-street.csv")
+cornwall21=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-03/2023-03-devon-and-cornwall-street.csv")
+cornwall22=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-04/2023-04-devon-and-cornwall-street.csv")
+cornwall23=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-05/2023-05-devon-and-cornwall-street.csv")
+cornwall24=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-06/2023-06-devon-and-cornwall-street.csv")
+cornwall25=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-07/2023-07-devon-and-cornwall-street.csv")
+cornwall26=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-08/2023-08-devon-and-cornwall-street.csv")
+cornwall27=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-09/2023-09-devon-and-cornwall-street.csv")
+cornwall28=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-10/2023-10-devon-and-cornwall-street.csv")
+cornwall29=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-11/2023-11-devon-and-cornwall-street.csv")
+cornwall30=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-12/2023-12-devon-and-cornwall-street.csv")
+bristol19=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-01/2023-01-avon-and-somerset-street.csv")
+bristol20=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-02/2023-02-avon-and-somerset-street.csv")
+bristol21=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-03/2023-03-avon-and-somerset-street.csv")
+bristol22=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-04/2023-04-avon-and-somerset-street.csv")
+bristol23=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-05/2023-05-avon-and-somerset-street.csv")
+bristol24=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-06/2023-06-avon-and-somerset-street.csv")
+bristol25=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-07/2023-07-avon-and-somerset-street.csv")
+bristol26=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-08/2023-08-avon-and-somerset-street.csv")
+bristol27=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-09/2023-09-avon-and-somerset-street.csv")
+bristol28=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-10/2023-10-avon-and-somerset-street.csv")
+bristol29=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-11/2023-11-avon-and-somerset-street.csv")
+bristol30=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2023-12/2023-12-avon-and-somerset-street.csv")
+
+#2024
+cornwall31=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-01/2024-01-devon-and-cornwall-street.csv")
+cornwall32=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-02/2024-02-devon-and-cornwall-street.csv")
+cornwall33=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-03/2024-03-devon-and-cornwall-street.csv")
+cornwall34=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-04/2024-04-devon-and-cornwall-street.csv")
+cornwall35=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-05/2024-05-devon-and-cornwall-street.csv")
+cornwall36=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-06/2024-06-devon-and-cornwall-street.csv")
+bristol31=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-01/2024-01-avon-and-somerset-street.csv")
+bristol32=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-02/2024-02-avon-and-somerset-street.csv")
+bristol33=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-03/2024-03-avon-and-somerset-street.csv")
+bristol34=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-04/2024-04-avon-and-somerset-street.csv")
+bristol35=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-05/2024-05-avon-and-somerset-street.csv")
+bristol36=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2024-06/2024-06-avon-and-somerset-street.csv")
+
+#Combining the Datasets
+crime_combined=rbind(
+  bristol1,
+  bristol2,
+  bristol3,
+  bristol4,
+  bristol5,
+  bristol6,
+  bristol7,
+  bristol8,
+  bristol9,
+  bristol10,
+  bristol11,
+  bristol12,
+  bristol13,
+  bristol14,
+  bristol15,
+  bristol16,
+  bristol17,
+  bristol18,
+  bristol19,
+  bristol20,
+  bristol21,
+  bristol22,
+  bristol23,
+  bristol24,
+  bristol25,
+  bristol26,
+  bristol27,
+  bristol28,
+  bristol29,
+  bristol30,
+  bristol31,
+  bristol32,
+  bristol33,
+  bristol34,
+  bristol35,
+  bristol36,
+  
+  cornwall1,
+  cornwall2,
+  cornwall3,
+  cornwall4,
+  cornwall5,
+  cornwall6,
+  cornwall7,
+  cornwall8,
+  cornwall9,
+  cornwall10,
+  cornwall11,
+  cornwall12,
+  cornwall13,
+  cornwall14,
+  cornwall15,
+  cornwall16,
+  cornwall17,
+  cornwall18,
+  cornwall19,
+  cornwall20,
+  cornwall21,
+  cornwall22,
+  cornwall23,
+  cornwall24,
+  cornwall25,
+  cornwall26,
+  cornwall27,
+  cornwall28,
+  cornwall29,
+  cornwall30,
+  cornwall31,
+  cornwall32,
+  cornwall33,
+  cornwall34,
+  cornwall35,
+  cornwall36
+)
+
+head(crime_combined)
+#View(crime_combined)
+
+#Postcode to LSOA
+postcode_to_lsoa <- read_csv("/Users/acer/Desktop/assignment/Obtain/Postcode to LSOA.csv")
+selected_lsoa <- postcode_to_lsoa %>%
+  select(`lsoa11cd`, `lsoa11nm`, `ladnm`, `pcds`)
+
+#Population
+population <- read_csv("/Users/acer/Desktop/assignment/Obtain/Population.csv")
+
+selected_crime <- crime_combined %>% 
+  select(Month, `LSOA code`, `Crime type`, `Falls within`)
+
+colnames(selected_lsoa) = c('LSOA code', 'street', 'counties', "postcode")
+colnames(population) = c("postcode", "population")
+
+#Cleaning LSOA
+clean_lsoa <- selected_lsoa %>% 
+  filter(counties %in% c("Bristol,City of","Cornwall")) %>% 
+  mutate(postcode=str_trim((substring(postcode,1,6))))
+
+View(clean_lsoa)
+clean_lsoa= clean_lsoa%>%
+  distinct()
+#View(clean_lsoa)
+dim(clean_lsoa)
+
+#Exporting cleaned file
+finalCrime= selected_crime %>% 
+  left_join(clean_lsoa, by=("LSOA code"),relationship = "many-to-many") %>% 
+  mutate(Year=str_trim(substring(Month,1,4))) %>% 
+  mutate(Month=str_trim(substring(Month,6,7))) %>% 
+  left_join(population,by="postcode") %>% 
+  distinct() %>% 
+  na.omit()
+
+dim(finalCrime)
+#View(finalCrime)
+
+write.csv(finalCrime, "/Users/acer/Desktop/assignment/Cleaned/crime_cleaned.csv")
+
+
+#school cleaning
