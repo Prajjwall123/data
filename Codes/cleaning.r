@@ -280,7 +280,7 @@ colnames(population) = c("postcode", "population")
 
 #Cleaning LSOA
 clean_lsoa <- selected_lsoa %>% 
-  filter(counties %in% c("Bristol,City of","Cornwall")) %>% 
+  filter(counties %in% c("Bristol, City of","Cornwall")) %>% 
   mutate(postcode=str_trim((substring(postcode,1,6))))
 
 View(clean_lsoa)
@@ -303,5 +303,47 @@ dim(finalCrime)
 
 write.csv(finalCrime, "/Users/acer/Desktop/assignment/Cleaned/crime_cleaned.csv")
 
+#School Cleaning
 
-#school cleaning
+bristol_school21=read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Bristol/2021-2022/801_ks4final.csv")
+bristol_school22=read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Bristol/2022-2023/801_ks4final.csv")
+cornwall_school21=read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Cornwall/2021-2022/908_ks4final.csv")
+cornwall_school22=read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Cornwall/2022-2023/908_ks4final.csv")
+
+bristol_school21 = bristol_school21 %>%
+  select(SCHNAME, PCODE, ATT8SCR, TOWN)%>%
+  mutate(YEAR=2021,  COUNTY="Bristol")
+
+bristol_school22 = bristol_school21 %>%
+  select(SCHNAME, PCODE, ATT8SCR, TOWN)%>%
+  mutate(YEAR=2022, COUNTY="Bristol")
+
+cornwall_school21 = cornwall_school21 %>%
+  select(SCHNAME, PCODE, ATT8SCR, TOWN)%>%
+  mutate(YEAR=2021, COUNTY="Cornwall")
+
+cornwall_school22 = cornwall_school21 %>%
+  select(SCHNAME, PCODE, ATT8SCR, TOWN)%>%
+  mutate(YEAR=2022, COUNTY="Cornwall")
+
+combined_bristol_school = rbind(bristol_school21, bristol_school22)
+combined_cornwall_school = rbind(cornwall_school21, cornwall_school22)
+
+#view(combined_bristol_school)
+#view(combined_cornwall_school)
+
+cleaned_bristol_school = cleaned_bristol_school %>%
+  filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR)  & !is.na(TOWN)) %>%
+  filter(ATT8SCR != "NE" & ATT8SCR != "SUPP")#NE= NOT ENOUGH AND SUPP= SUPPLEMENTARY
+
+combined_cornwall_school = combined_cornwall_school %>%
+  filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR) & !is.na(TOWN)) %>%
+  filter(ATT8SCR != "NE" & ATT8SCR != "SUPP") %>%
+  distinct()
+
+#view(combined_cornwall_school)
+
+both = rbind(cleaned_bristol_school, combined_cornwall_school)
+view(both)
+dim(both)
+write_csv(both, "/Users/acer/Desktop/assignment/Cleaned/cleaned_school.csv")
