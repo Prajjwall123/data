@@ -334,7 +334,7 @@ combined_cornwall_school = rbind(cornwall_school21, cornwall_school22)
 
 cleaned_bristol_school = cleaned_bristol_school %>%
   filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR)  & !is.na(TOWN)) %>%
-  filter(ATT8SCR != "NE" & ATT8SCR != "SUPP")#NE= NOT ENOUGH AND SUPP= SUPPLEMENTARY
+  filter(ATT8SCR != "NE" & ATT8SCR != "SUPP")
 
 combined_cornwall_school = combined_cornwall_school %>%
   filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR) & !is.na(TOWN)) %>%
