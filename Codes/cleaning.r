@@ -45,30 +45,21 @@ cleaned_data <- total_housing_data %>%
 
 cleaned_data <- cleaned_data%>%
   mutate(`Date of Transfer` = substr(`Date of Transfer`, 1, 4)) %>%
-    rename(Year = `Date of Transfer`)
-
-
-filtered_data <- cleaned_data %>%
+    rename(Year = `Date of Transfer`)%>%
   filter(County %in% c('CORNWALL', 'CITY OF BRISTOL'))%>%
   distinct()
 
 
-output_path <- "/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv"
-
-write_csv(filtered_data, output_path)
+write_csv(cleaned_data, "/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv")
 
 #Broadband cleaning
 
-file_path <- "/Users/acer/Desktop/assignment/Obtain/broadbandspeed/201805_fixed_pc_performance_r03.csv"
-broadband <- read_csv(file_path)
-
-
-filtered_broadband <- broadband %>%
-  select(postcode_space, 
+broadband <- read_csv("/Users/acer/Desktop/assignment/Obtain/broadbandspeed/201805_fixed_pc_performance_r03.csv") %>%
+  select(`postcode_space`, 
          `Median download speed (Mbit/s)`, 
          `Median upload speed (Mbit/s)`, 
          `Average upload speed (Mbit/s)`, 
-         `Average download speed (Mbit/s)`, 
+         `Average download speed (Mbit/s)`,
          `Maximum upload speed (Mbit/s)`, 
          `Maximum download speed (Mbit/s)`) %>%
   filter(!is.na(postcode_space) & 
@@ -77,32 +68,17 @@ filtered_broadband <- broadband %>%
            !is.na(`Average upload speed (Mbit/s)`) & 
            !is.na(`Average download speed (Mbit/s)`) & 
            !is.na(`Maximum upload speed (Mbit/s)`) & 
-           !is.na(`Maximum download speed (Mbit/s)`))
-
-output_path <- "/Users/acer/Desktop/assignment/Cleaned/cleaned_broadband_data.csv"
-
-write_csv(filtered_broadband, output_path)
-
-housing_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv")
-broadband_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_broadband_data.csv")
-
-View(housing_data)
-View(broadband_data)
-
-merged_data <- broadband_data %>%
-  left_join(housing_data %>% select(Postcode, `Town/City`, County), 
-            by = c("postcode_space" = "Postcode"))
-
-filtered_data <- merged_data %>%
-  filter(!is.na(`Town/City`) & !is.na(County))%>%
+           !is.na(`Maximum download speed (Mbit/s)`)) %>%
+  left_join(cleaned_data %>%
+              select(Postcode, `Town/City`, County),
+            by = c("postcode_space" = "Postcode")) %>%
+  filter(!is.na(`Town/City`) & !is.na(County)) %>%
   distinct()
 
-dim(filtered_data)
-
-write_csv(filtered_data, "/Users/acer/Desktop/assignment/Cleaned/merged_broadband_housing_data.csv")
+write_csv(broadband, "/Users/acer/Desktop/assignment/Cleaned/cleaned_broadband_data.csv")
 
 
-#Crime
+#Crime cleaning
 
 #2021
 cornwall1=read_csv("/Users/acer/Desktop/assignment/Obtain/Crime/2021-07/2021-07-devon-and-cornwall-street.csv")
@@ -261,47 +237,39 @@ crime_combined=rbind(
   cornwall36
 )
 
-head(crime_combined)
-#View(crime_combined)
 
-#Postcode to LSOA
-postcode_to_lsoa <- read_csv("/Users/acer/Desktop/assignment/Obtain/Postcode to LSOA.csv")
-selected_lsoa <- postcode_to_lsoa %>%
+
+postcode_to_lsoa = read_csv("/Users/acer/Desktop/assignment/Obtain/Postcode to LSOA.csv")
+colnames(cleanlsoa) = c('LSOA code', 'street', 'counties', "postcode")
+population = read_csv("/Users/acer/Desktop/assignment/Obtain/Population.csv")
+colnames(population) = c("postcode", "count")
+
+
+cleancrime = crime_combined %>%
+  select(Month, `LSOA code`, `Crime type`, `Falls within`)
+cleanlsoa = postcode_to_lsoa %>%
   select(`lsoa11cd`, `lsoa11nm`, `ladnm`, `pcds`)
 
-#Population
-population <- read_csv("/Users/acer/Desktop/assignment/Obtain/Population.csv")
+#dim(cleanlsoa)
+#dim(cleancrime)
 
-selected_crime <- crime_combined %>% 
-  select(Month, `LSOA code`, `Crime type`, `Falls within`)
+county_lsoa = cleanlsoa %>%
+  filter(counties %in% c("Bristol, City of", "Cornwall")) %>%
+  mutate(postcode = str_trim((substring(postcode, 1, 6))))
 
-colnames(selected_lsoa) = c('LSOA code', 'street', 'counties', "postcode")
-colnames(population) = c("postcode", "population")
-
-#Cleaning LSOA
-clean_lsoa <- selected_lsoa %>% 
-  filter(counties %in% c("Bristol, City of","Cornwall")) %>% 
-  mutate(postcode=str_trim((substring(postcode,1,6))))
-
-View(clean_lsoa)
-clean_lsoa= clean_lsoa%>%
-  distinct()
-#View(clean_lsoa)
-dim(clean_lsoa)
-
-#Exporting cleaned file
-finalCrime= selected_crime %>% 
-  left_join(clean_lsoa, by=("LSOA code"),relationship = "many-to-many") %>% 
-  mutate(Year=str_trim(substring(Month,1,4))) %>% 
-  mutate(Month=str_trim(substring(Month,6,7))) %>% 
-  left_join(population,by="postcode") %>% 
-  distinct() %>% 
+final_cleaned_crime = cleancrime %>%
+  left_join(county_lsoa, by = "LSOA code", relationship = "many-to-many") %>%
+  mutate(Year  = str_trim(substring(Month,  1, 4))) %>%
+  mutate(Month  = str_trim(substring(Month,  6, 7))) %>%
+  left_join(population, by = "postcode") %>%
+  distinct()%>%
   na.omit()
 
-dim(finalCrime)
-#View(finalCrime)
+#dim(final_cleaned_crime)
+#view(final_cleaned_crime)
 
-write.csv(finalCrime, "/Users/acer/Desktop/assignment/Cleaned/crime_cleaned.csv")
+
+write.csv(final_cleaned_crime, "/Users/acer/Desktop/assignment/Cleaned/crime_cleaned.csv")
 
 #School Cleaning
 
@@ -327,23 +295,20 @@ cornwall_school22 = cornwall_school21 %>%
   mutate(YEAR=2022, COUNTY="Cornwall")
 
 combined_bristol_school = rbind(bristol_school21, bristol_school22)
-combined_cornwall_school = rbind(cornwall_school21, cornwall_school22)
-
-#view(combined_bristol_school)
-#view(combined_cornwall_school)
-
 cleaned_bristol_school = cleaned_bristol_school %>%
   filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR)  & !is.na(TOWN)) %>%
   filter(ATT8SCR != "NE" & ATT8SCR != "SUPP")
 
+combined_cornwall_school = rbind(cornwall_school21, cornwall_school22)
 combined_cornwall_school = combined_cornwall_school %>%
   filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR) & !is.na(TOWN)) %>%
   filter(ATT8SCR != "NE" & ATT8SCR != "SUPP") %>%
   distinct()
 
+#view(combined_bristol_school)
 #view(combined_cornwall_school)
 
-both = rbind(cleaned_bristol_school, combined_cornwall_school)
-view(both)
-dim(both)
-write_csv(both, "/Users/acer/Desktop/assignment/Cleaned/cleaned_school.csv")
+cleaned_bristol_cornwall = rbind(cleaned_bristol_school, combined_cornwall_school)
+#View(cleaned_bristol_cornwall)
+#dim(cleaned_bristol_cornwall)
+write_csv(cleaned_bristol_cornwall, "/Users/acer/Desktop/assignment/Cleaned/cleaned_school.csv")
