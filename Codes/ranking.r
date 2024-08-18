@@ -68,3 +68,23 @@ final_combined_data <- broadband_schooling %>%
   inner_join(final_crime, by = "Town/City")
 
 View(final_combined_data)
+
+
+final_combined_data <- final_combined_data %>%
+  mutate(
+    z_download_speed = (avg_download_speed - mean(avg_download_speed)) / sd(avg_download_speed),
+    z_upload_speed = (avg_upload_speed - mean(avg_upload_speed)) / sd(avg_upload_speed),
+    z_att8_score = (average_att8_score - mean(average_att8_score)) / sd(average_att8_score),
+    z_price = (average_price - mean(average_price)) / sd(average_price),
+    z_crime = (crimerate - mean(crimerate)) / sd(crimerate)
+  )
+
+final_combined_data <- final_combined_data %>%
+  mutate(
+    final_score = z_download_speed + z_upload_speed + z_att8_score - z_price - z_crime
+  )
+
+final_combined_data <- final_combined_data %>%
+  arrange(desc(final_score))
+
+View(final_combined_data)
