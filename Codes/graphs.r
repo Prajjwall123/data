@@ -39,22 +39,17 @@ ggplot(average_attainment_by_address, aes(x = factor(ADDRESS2, levels = ADDRESS2
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 #Cornwall average attainment 8 score in academic year 2021-2022
-schooling_data = read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_school.csv")
+cornwall_21=schooling_data %>% 
+  filter(YEAR==2021) %>% 
+  filter(COUNTY=="Cornwall")
+colnames(cornwall_21)
+head(cornwall_21)
 
-schooling_data_cornwall = schooling_data %>%
-  filter(YEAR == 2022) %>%
-  filter(COUNTY == "Cornwall")
-
-average_attainment_by_address = schooling_data_bristol %>%
-  group_by(ADDRESS2) %>%
-  summarise(Average_ATT8SCR = mean(as.numeric(ATT8SCR))) %>%
-  arrange(desc(Average_ATT8SCR))
-
-ggplot(average_attainment_by_address, aes(x = factor(ADDRESS2, levels = ADDRESS2), y = Average_ATT8SCR, group = 1)) +
+ggplot(cornwall_21, aes(x = TOWN, y = ATT8SCR, group = 1)) +
   geom_line(color = "red") +
   geom_point() +
-  labs(title = "Average Attainment 8 Score by district in Cornwall (2021-2022)",
-       x = "District",
+  labs(title = "Average Attainment 8 Score in 2021-2022 in Cornwall",
+       x = "Town",
        y = "Average Attainment 8 Score") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
@@ -69,6 +64,7 @@ housing_2023 <- housing_data %>%
 ggplot(data = housing_2023, aes(x = County, y = Price, fill = County)) +
   geom_boxplot() +
   labs(title = "Boxplot for	Average House Price in Year 2023", x = "County", y = "Price") +
+  scale_y_continuous(labels = scales::comma) +
   theme_minimal()
 
 # Bar Chart of Average House Price in 2022 for both counties
@@ -86,7 +82,8 @@ ggplot(average_price_2023, aes(x = County, y = Average_Price)) +
   geom_bar(stat = "identity",fill = c("red", "blue")) +
   ggtitle("Bar Chart of Average House Price in Year 2023") +
   xlab("County") +
-  ylab("Average Price")
+  ylab("Average Price")+
+  scale_y_continuous(labels = scales::comma) +
 
 # Line Chart of Average House Price from 2020 to 2023 for both counties
 housing_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv")
@@ -188,8 +185,8 @@ combined_data <- bind_rows(
 #Draw the graph
 ggplot(combined_data, aes(x = county, y = offence_rate, fill = county)) +
   geom_boxplot() +
-  labs(title = "Distribution of Drug Offence Rates (2023)",
-       x = "Location",
+  labs(title = "Drug Offence Rates (2023)",
+       x = "County",
        y = "Offence Rate (per 10,000)") +
   theme_minimal()
 
@@ -198,7 +195,7 @@ ggplot(combined_data, aes(x = county, y = offence_rate, fill = county)) +
 vehicle_crime = crime %>%
   filter(`Crime type` == "Vehicle crime")%>%
   group_by(Year) %>%
-  summarise(total_crime = sum(count, na.rm = TRUE))
+  summarise(total_crime = sum(count))
 
 vehicle_crime_df <- as.data.frame(t(vehicle_crime$total_crime))
 colnames(vehicle_crime_df) <- vehicle_crime$Year

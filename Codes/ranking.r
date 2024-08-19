@@ -36,7 +36,7 @@ average_att8_by_town <- schooling %>%
   mutate(`Town/City` = str_trim(toupper(`Town/City`)))
 
 filtered_housing <- housing %>%
-  filter(Year == 2022) %>%
+  filter(Year == 2023) %>%
   group_by(`Town/City`) %>%
   summarise(average_price = mean(Price)) %>%
   filter(!is.na(`Town/City`)) %>%
@@ -93,3 +93,20 @@ final_combined_data <- final_combined_data %>%
 View(final_combined_data)
 
 write_csv(final_combined_data, "/Users/acer/Desktop/assignment/Report/reccomendation_output.csv")
+
+#based on housing
+
+ranked_by_price <- final_combined_data %>%
+  arrange(average_price)
+
+View(ranked_by_price)
+
+ranked_by_download_speed <- final_combined_data %>%
+  arrange(avg_download_speed)
+
+View(ranked_by_download_speed)
+
+ranked_by_schools <- final_combined_data %>%
+  arrange(desc(average_att8_score))
+
+View(ranked_by_schools)
