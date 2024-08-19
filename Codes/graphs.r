@@ -246,8 +246,9 @@ ggplot(drug_rate_per_10k, aes(x = Year, y = rate_per_10k, color = counties, grou
 # robbery  pie chart
 crime_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/crime_cleaned.csv")
 
+
 rober_november <- crime_data %>%
-  filter(`Crime type` == "Robbery" & Year == "2023" & Month == "11") %>%
+  filter(`Crime type` == "Robbery" & Year == "2023" & Month == "10") %>%
   group_by(counties) %>%
   summarise(total_robberies = n()) %>%
   mutate(percentage = total_robberies / sum(total_robberies) * 100)
@@ -257,6 +258,6 @@ ggplot(rober_november, aes(x = "", y = percentage, fill = counties)) +
   coord_polar("y") +
   geom_text(aes(label = paste0(round(percentage, 1), "%")), 
             position = position_stack(vjust = 0.5)) +
-  labs(title = "Distribution of Robberies by County (November 2023)", fill = "County") +
+  labs(title = "Distribution of Robberies by County (October 2023)", fill = "County") +
   theme_minimal()
 
