@@ -26,6 +26,9 @@ broadband_final <- combined_data %>%
     avg_upload_speed = mean(`Average upload speed (Mbit/s)`)
   )
 
+schooling<-schooling%>%
+  select(-`ADDRESS2`)
+
 average_att8_by_town <- schooling %>%
   group_by(TOWN) %>%
   summarise(average_att8_score = mean(ATT8SCR)) %>%

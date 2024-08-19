@@ -9,7 +9,7 @@ schooling_data = read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_school
 
 #Average Attainment 8 score in the year 2021-2022 academic year for Bristol and Cornwall
 schooling_data = schooling_data %>%
-  filter(YEAR == 2021)
+  filter(YEAR == 2022)
 
 ggplot(schooling_data, aes(x = COUNTY, y = ATT8SCR, fill = COUNTY)) +
   geom_boxplot() +
@@ -20,65 +20,71 @@ ggplot(schooling_data, aes(x = COUNTY, y = ATT8SCR, fill = COUNTY)) +
 
 #Bristol average attainment 8 score in academic year 2021-2022
 schooling_data = read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_school.csv")
-#View(schooling_data)
 
 schooling_data_bristol = schooling_data %>%
-  filter(YEAR == 2021)%>%
-  filter(COUNTY=="Bristol")
+  filter(YEAR == 2022) %>%
+  filter(COUNTY == "Bristol")
 
-ggplot(schooling_data_bristol, aes(x = SCHNAME, y = ATT8SCR, group = 1)) +
+average_attainment_by_address = schooling_data_bristol %>%
+  group_by(ADDRESS2) %>%
+  summarise(Average_ATT8SCR = mean(as.numeric(ATT8SCR))) %>%
+  arrange(desc(Average_ATT8SCR))
+
+ggplot(average_attainment_by_address, aes(x = factor(ADDRESS2, levels = ADDRESS2), y = Average_ATT8SCR, group = 1)) +
   geom_line(color = "red") +
   geom_point() +
-  labs(title = "Bristol Schools: Average Attainment 8 Score (2021-2022)",
-       x = "School Name",
+  labs(title = "Average Attainment 8 Score by district in Bristol (2021-2022)",
+       x = "District",
        y = "Average Attainment 8 Score") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
-#theme_minimal()
 
 #Cornwall average attainment 8 score in academic year 2021-2022
 schooling_data = read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_school.csv")
-#View(schooling_data)
 
 schooling_data_cornwall = schooling_data %>%
-  filter(YEAR == 2021)%>%
-  filter(COUNTY=="Cornwall")
+  filter(YEAR == 2022) %>%
+  filter(COUNTY == "Cornwall")
 
-ggplot(schooling_data_cornwall, aes(x = SCHNAME, y = ATT8SCR, group = 1)) +
-  geom_line(color = "blue") +
+average_attainment_by_address = schooling_data_bristol %>%
+  group_by(ADDRESS2) %>%
+  summarise(Average_ATT8SCR = mean(as.numeric(ATT8SCR))) %>%
+  arrange(desc(Average_ATT8SCR))
+
+ggplot(average_attainment_by_address, aes(x = factor(ADDRESS2, levels = ADDRESS2), y = Average_ATT8SCR, group = 1)) +
+  geom_line(color = "red") +
   geom_point() +
-  labs(title = "Cornwall Schools: Average Attainment 8 Score (2021-2022)",
-       x = "School Name",
+  labs(title = "Average Attainment 8 Score by district in Cornwall (2021-2022)",
+       x = "District",
        y = "Average Attainment 8 Score") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
 
 # House Prices
 housing_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv")
 #View(housing_data)
 
-housing_2022 <- housing_data %>% 
-  filter(Year == 2022)
+housing_2023 <- housing_data %>% 
+  filter(Year == 2023)
 
 # Boxplot of Average House Price in 2022 for both counties
-ggplot(data = housing_2022, aes(x = County, y = Price, fill = County)) +
+ggplot(data = housing_2023, aes(x = County, y = Price, fill = County)) +
   geom_boxplot() +
-  labs(title = "Boxplot for	Average House Price in Year 2022", x = "County", y = "Price") +
+  labs(title = "Boxplot for	Average House Price in Year 2023", x = "County", y = "Price") +
   theme_minimal()
 
 # Bar Chart of Average House Price in 2022 for both counties
 housing_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_housing_data.csv")
 #View(housing_data)
 
-housing_2022 <- housing_data %>% 
-  filter(Year == 2022)
+housing_2023 <- housing_data %>% 
+  filter(Year == 2023)
 
-average_price_2022 <- housing_2022 %>% 
+average_price_2023 <- housing_2023 %>% 
   group_by(County) %>% 
   summarise(Average_Price = mean(Price))
 
-ggplot(average_price_2022, aes(x = County, y = Average_Price)) +
+ggplot(average_price_2023, aes(x = County, y = Average_Price)) +
   geom_bar(stat = "identity",fill = c("red", "blue")) +
-  ggtitle("Bar Chart of Average House Price in Year 2022") +
+  ggtitle("Bar Chart of Average House Price in Year 2023") +
   xlab("County") +
   ylab("Average Price")
 
@@ -214,8 +220,25 @@ radarchart(vehicle_crime_df,
            caxislabels = seq(0, max(vehicle_crime$total_crime)),
            title = "Vehicle Crime Rate from 2021 to 2024")
 
+# robbery  pie chart
+crime_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/crime_cleaned.csv")
 
-#crime rate line chart
+rober_november <- crime_data %>%
+  filter(`Crime type` == "Robbery" & Year == "2023" & Month == "10") %>%
+  group_by(counties) %>%
+  summarise(total_robberies = n()) %>%
+  mutate(percentage = total_robberies / sum(total_robberies) * 100)
+
+ggplot(rober_november, aes(x = "", y = percentage, fill = counties)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar("y") +
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5)) +
+  labs(title = "Distribution of Robberies by County (October 2023)", fill = "County") +
+  theme_minimal()
+
+
+#drug offense rate line chart
 crime_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/crime_cleaned.csv")
 
 county_population <- crime_data %>%
@@ -241,23 +264,3 @@ ggplot(drug_rate_per_10k, aes(x = Year, y = rate_per_10k, color = counties, grou
        y = "Drug Offense Rate per 10,000 People",
        color = "Counties") +
   theme_minimal()
-
-
-# robbery  pie chart
-crime_data <- read_csv("/Users/acer/Desktop/assignment/Cleaned/crime_cleaned.csv")
-
-
-rober_november <- crime_data %>%
-  filter(`Crime type` == "Robbery" & Year == "2023" & Month == "10") %>%
-  group_by(counties) %>%
-  summarise(total_robberies = n()) %>%
-  mutate(percentage = total_robberies / sum(total_robberies) * 100)
-
-ggplot(rober_november, aes(x = "", y = percentage, fill = counties)) +
-  geom_bar(width = 1, stat = "identity") +
-  coord_polar("y") +
-  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
-            position = position_stack(vjust = 0.5)) +
-  labs(title = "Distribution of Robberies by County (October 2023)", fill = "County") +
-  theme_minimal()
-

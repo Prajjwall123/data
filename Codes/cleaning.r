@@ -273,42 +273,48 @@ write.csv(final_cleaned_crime, "/Users/acer/Desktop/assignment/Cleaned/crime_cle
 
 #School Cleaning
 
-bristol_school21=read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Bristol/2021-2022/801_ks4final.csv")
-bristol_school22=read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Bristol/2022-2023/801_ks4final.csv")
-cornwall_school21=read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Cornwall/2021-2022/908_ks4final.csv")
-cornwall_school22=read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Cornwall/2022-2023/908_ks4final.csv")
+bristol_school21 = read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Bristol/2021-2022/801_ks4final.csv")
+bristol_school22 = read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Bristol/2022-2023/801_ks4final.csv")
+cornwall_school21 = read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Cornwall/2021-2022/908_ks4final.csv")
+cornwall_school22 = read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Cornwall/2022-2023/908_ks4final.csv")
 
+# Process Bristol schools
 bristol_school21 = bristol_school21 %>%
-  select(SCHNAME, PCODE, ATT8SCR, TOWN)%>%
-  mutate(YEAR=2021,  COUNTY="Bristol")
+  select(SCHNAME, PCODE, ATT8SCR, TOWN, ADDRESS2) %>%
+  mutate(YEAR = 2021, COUNTY = "Bristol")
 
-bristol_school22 = bristol_school21 %>%
-  select(SCHNAME, PCODE, ATT8SCR, TOWN)%>%
-  mutate(YEAR=2022, COUNTY="Bristol")
-
-cornwall_school21 = cornwall_school21 %>%
-  select(SCHNAME, PCODE, ATT8SCR, TOWN)%>%
-  mutate(YEAR=2021, COUNTY="Cornwall")
-
-cornwall_school22 = cornwall_school21 %>%
-  select(SCHNAME, PCODE, ATT8SCR, TOWN)%>%
-  mutate(YEAR=2022, COUNTY="Cornwall")
+bristol_school22 = bristol_school22 %>%
+  select(SCHNAME, PCODE, ATT8SCR, TOWN, ADDRESS2) %>%
+  mutate(YEAR = 2022, COUNTY = "Bristol")
 
 combined_bristol_school = rbind(bristol_school21, bristol_school22)
-cleaned_bristol_school = cleaned_bristol_school %>%
-  filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR)  & !is.na(TOWN)) %>%
+cleaned_bristol_school = combined_bristol_school %>%
+  filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR) & !is.na(TOWN) & !is.na(ADDRESS2)) %>%
   filter(ATT8SCR != "NE" & ATT8SCR != "SUPP")
 
+# Process Cornwall schools
+cornwall_school21 = cornwall_school21 %>%
+  select(SCHNAME, PCODE, ATT8SCR, TOWN, ADDRESS2) %>%
+  mutate(YEAR = 2021, COUNTY = "Cornwall")
+
+cornwall_school22 = cornwall_school22 %>%
+  select(SCHNAME, PCODE, ATT8SCR, TOWN, ADDRESS2) %>%
+  mutate(YEAR = 2022, COUNTY = "Cornwall")
+
 combined_cornwall_school = rbind(cornwall_school21, cornwall_school22)
-combined_cornwall_school = combined_cornwall_school %>%
-  filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR) & !is.na(TOWN)) %>%
+cleaned_cornwall_school = combined_cornwall_school %>%
+  filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR) & !is.na(TOWN) & !is.na(ADDRESS2)) %>%
   filter(ATT8SCR != "NE" & ATT8SCR != "SUPP") %>%
   distinct()
 
-#view(combined_bristol_school)
-#view(combined_cornwall_school)
 
-cleaned_bristol_cornwall = rbind(cleaned_bristol_school, combined_cornwall_school)
-#View(cleaned_bristol_cornwall)
+#view(cleaned_bristol_school)
+#view(cleaned_cornwall_school)
+
+cleaned_bristol_cornwall = rbind(cleaned_bristol_school, combined_cornwall_school)%>%
+  filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR) & !is.na(TOWN)) %>%
+  filter(ATT8SCR != "NE" & ATT8SCR != "SUPP") %>%
+  distinct()
+View(cleaned_bristol_cornwall)
 #dim(cleaned_bristol_cornwall)
 write_csv(cleaned_bristol_cornwall, "/Users/acer/Desktop/assignment/Cleaned/cleaned_school.csv")
