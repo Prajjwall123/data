@@ -1,7 +1,7 @@
 library(ggplot2)
 library(dplyr)
 library(fmsb)
-library(tidyr)
+
 
 # Schooling
 schooling_data = read_csv("/Users/acer/Desktop/assignment/Cleaned/cleaned_school.csv")
@@ -154,9 +154,6 @@ ggplot(cornwall_df, aes(x = Type, y = Speed)) +
   ggtitle("Average and Maximum Download Speeds in Cornwall") +
   xlab("") +
   ylab("Speed (Mbps)")
-
-
-
 
 
 #Crime

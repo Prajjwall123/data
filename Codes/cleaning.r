@@ -278,7 +278,7 @@ bristol_school22 = read_csv("/Users/acer/Desktop/assignment/Obtain/school info/B
 cornwall_school21 = read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Cornwall/2021-2022/908_ks4final.csv")
 cornwall_school22 = read_csv("/Users/acer/Desktop/assignment/Obtain/school info/Cornwall/2022-2023/908_ks4final.csv")
 
-# Process Bristol schools
+#Bristol schools
 bristol_school21 = bristol_school21 %>%
   select(SCHNAME, PCODE, ATT8SCR, TOWN, ADDRESS2) %>%
   mutate(YEAR = 2021, COUNTY = "Bristol")
@@ -292,7 +292,7 @@ cleaned_bristol_school = combined_bristol_school %>%
   filter(!is.na(SCHNAME) & !is.na(PCODE) & !is.na(ATT8SCR) & !is.na(TOWN) & !is.na(ADDRESS2)) %>%
   filter(ATT8SCR != "NE" & ATT8SCR != "SUPP")
 
-# Process Cornwall schools
+#Cornwall schools
 cornwall_school21 = cornwall_school21 %>%
   select(SCHNAME, PCODE, ATT8SCR, TOWN, ADDRESS2) %>%
   mutate(YEAR = 2021, COUNTY = "Cornwall")

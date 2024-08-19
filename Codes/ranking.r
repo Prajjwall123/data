@@ -51,15 +51,15 @@ town_data <- housing %>%
 filtered_crime <- crime %>%
   filter(Year == 2023) %>%
   group_by(postcode) %>%
-  summarise(crimeno = n()) %>%
-  arrange(desc(crimeno))
+  summarise(number_of_crimes = n()) %>%
+  arrange(desc(number_of_crimes))
 
 final_crime <- filtered_crime %>%
   left_join(town_data, by = "postcode") %>%
   na.omit() %>%
   distinct() %>%
   group_by(TOWN) %>%
-  summarise(crimerate = sum(crimeno)) %>%
+  summarise(crimerate = sum(number_of_crimes)) %>%
   rename("Town/City" = TOWN) %>%
   mutate(`Town/City` = str_trim(toupper(`Town/City`)))
 
@@ -91,3 +91,5 @@ final_combined_data <- final_combined_data %>%
   arrange(desc(final_score))
 
 View(final_combined_data)
+
+write_csv(final_combined_data, "/Users/acer/Desktop/assignment/Report/reccomendation_output.csv")
